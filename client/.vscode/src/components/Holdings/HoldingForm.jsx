@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Plus, X, Bell } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { API_URL } from "../../config";
 
 function HoldingForm({
   setHoldings,
@@ -68,7 +69,7 @@ function HoldingForm({
     try {
       if (isEditing && editHolding) {
         // PUT update
-        const response = await fetch(`http://localhost:5000/api/holdings/${editHolding._id}`, {
+        const response = await fetch(`${API_URL}/api/holdings/${editHolding._id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -88,7 +89,7 @@ function HoldingForm({
         );
       } else {
         // POST create
-        const response = await fetch("http://localhost:5000/api/holdings", {
+        const response = await fetch(`${API_URL}/api/holdings`, {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
@@ -122,7 +123,7 @@ function HoldingForm({
     if (val.trim().length > 1) {
       searchTimeoutRef.current = setTimeout(async () => {
         try {
-          const res = await fetch(`http://localhost:5000/api/holdings/search/${val}`, {
+          const res = await fetch(`${API_URL}/api/holdings/search/${val}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (res.ok) {

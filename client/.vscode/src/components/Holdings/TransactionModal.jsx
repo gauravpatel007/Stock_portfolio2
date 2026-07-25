@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { API_URL } from "../../config";
 
 function TransactionModal({ holding, onClose, setHoldings, onTransactionSuccess }) {
   const { token } = useAuth();
@@ -13,7 +14,7 @@ function TransactionModal({ holding, onClose, setHoldings, onTransactionSuccess 
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/holdings/${holding._id}/transaction`, {
+      const response = await fetch(`${API_URL}/api/holdings/${holding._id}/transaction`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

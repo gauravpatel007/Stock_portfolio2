@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../config";
 
 import { holdings as initialHoldings } from "../Data/holdingsData";
 import { transactions } from "../Data/transactionsData";
@@ -34,7 +35,7 @@ function Dashboard({ triggerNotificationRefresh }) {
   useEffect(() => {
     const fetchHoldings = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/holdings", {
+        const response = await fetch(`${API_URL}/api/holdings`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -55,7 +56,7 @@ function Dashboard({ triggerNotificationRefresh }) {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/transactions", {
+        const response = await fetch(`${API_URL}/api/transactions`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

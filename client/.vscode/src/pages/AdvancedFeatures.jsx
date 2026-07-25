@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../config";
 import RebalanceSection from "../components/Rebalance/RebalanceSection";
 import WatchlistSection from "../components/Watchlist/WatchlistSection";
 import SimpleWatchlistSection from "../components/Watchlist/SimpleWatchlistSection";
@@ -13,7 +14,7 @@ function AdvancedFeatures({ triggerNotificationRefresh }) {
   useEffect(() => {
     const fetchHoldings = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/holdings", {
+        const response = await fetch(`${API_URL}/api/holdings`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

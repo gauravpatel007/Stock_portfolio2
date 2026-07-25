@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Scale, AlertCircle, ArrowRightLeft, Bell } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { API_URL } from "../../config";
 
 function RebalanceSection({ holdings, triggerNotificationRefresh }) {
   const { token } = useAuth();
@@ -28,7 +29,7 @@ function RebalanceSection({ holdings, triggerNotificationRefresh }) {
 
   const savePercentageToDB = async (holdingId, value) => {
     try {
-      await fetch(`http://localhost:5000/api/holdings/${holdingId}`, {
+      await fetch(`${API_URL}/api/holdings/${holdingId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +45,7 @@ function RebalanceSection({ holdings, triggerNotificationRefresh }) {
   const handleSendRebalanceNotification = async () => {
     if (!holdings.length) return;
     try {
-      await fetch("http://localhost:5000/api/notifications", {
+      await fetch(`${API_URL}/api/notifications`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

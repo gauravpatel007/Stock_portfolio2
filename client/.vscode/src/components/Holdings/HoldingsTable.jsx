@@ -1,5 +1,6 @@
 import { FaTrash, FaEdit, FaDownload, FaPrint, FaPlus } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
+import { API_URL } from "../../config";
 import { exportToCSV, printReport } from "../../utils/exportUtils";
 
 function HoldingsTable({
@@ -35,7 +36,7 @@ function HoldingsTable({
   const deleteHolding = async (idToDelete) => {
     try {
       if (idToDelete) {
-        const response = await fetch(`http://localhost:5000/api/holdings/${idToDelete}`, {
+        const response = await fetch(`${API_URL}/api/holdings/${idToDelete}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`

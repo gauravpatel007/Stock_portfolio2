@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { LogOut, Bell, CheckCheck, Sun, Moon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { API_URL } from "../../config";
 import { useTheme } from "../../context/ThemeContext";
 import UserProfileModal from "../Profile/UserProfileModal";
 
@@ -18,7 +19,7 @@ function Navbar({ refreshTrigger }) {
   const fetchNotifications = async () => {
     if (!token) return;
     try {
-      const res = await fetch("http://localhost:5000/api/notifications", {
+      const res = await fetch(`${API_URL}/api/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Failed to fetch notifications");
@@ -47,7 +48,7 @@ function Navbar({ refreshTrigger }) {
 
   const markAllRead = async () => {
     try {
-      await fetch("http://localhost:5000/api/notifications/read-all", {
+      await fetch(`${API_URL}/api/notifications/read-all`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${token}` },
       });

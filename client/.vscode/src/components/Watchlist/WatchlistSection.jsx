@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Eye, Bell, Trash2, Plus, CheckCircle2, AlertTriangle, RefreshCw } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { API_URL } from "../../config";
 
 function WatchlistSection({ holdings, triggerNotificationRefresh }) {
   const [watchlist, setWatchlist] = useState([]);
@@ -17,7 +18,7 @@ function WatchlistSection({ holdings, triggerNotificationRefresh }) {
   // Fetch Watchlist
   const fetchWatchlist = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/watchlist", {
+      const res = await fetch(`${API_URL}/api/watchlist`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Failed to fetch watchlist");
@@ -56,7 +57,7 @@ function WatchlistSection({ holdings, triggerNotificationRefresh }) {
         if (isTriggered) {
           // Send notification alert to backend
           try {
-            await fetch("http://localhost:5000/api/notifications", {
+            await fetch(`${API_URL}/api/notifications`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -73,7 +74,7 @@ function WatchlistSection({ holdings, triggerNotificationRefresh }) {
 
             // If frequency is 'ONCE', deactivate the trigger in DB
             if (item.frequency === "ONCE") {
-              await fetch(`http://localhost:5000/api/watchlist/${item._id}`, {
+              await fetch(`${API_URL}/api/watchlist/${item._id}`, {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
@@ -101,7 +102,7 @@ function WatchlistSection({ holdings, triggerNotificationRefresh }) {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/watchlist", {
+      const res = await fetch(`${API_URL}/api/watchlist`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -133,7 +134,7 @@ function WatchlistSection({ holdings, triggerNotificationRefresh }) {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/watchlist/${id}`, {
+      const res = await fetch(`${API_URL}/api/watchlist/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -146,7 +147,7 @@ function WatchlistSection({ holdings, triggerNotificationRefresh }) {
 
   const toggleActive = async (id, currentStatus) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/watchlist/${id}`, {
+      const res = await fetch(`${API_URL}/api/watchlist/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

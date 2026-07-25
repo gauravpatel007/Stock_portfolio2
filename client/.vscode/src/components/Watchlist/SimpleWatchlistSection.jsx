@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { List, Trash2, Plus, TrendingUp } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { API_URL } from "../../config";
 
 function SimpleWatchlistSection() {
   const [watchlist, setWatchlist] = useState([]);
@@ -10,7 +11,7 @@ function SimpleWatchlistSection() {
   useEffect(() => {
     const fetchWatchlist = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/simple-watchlist", {
+        const res = await fetch(`${API_URL}/api/simple-watchlist`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch");
@@ -28,7 +29,7 @@ function SimpleWatchlistSection() {
     if (!symbol) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/simple-watchlist", {
+      const res = await fetch(`${API_URL}/api/simple-watchlist`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +50,7 @@ function SimpleWatchlistSection() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/simple-watchlist/${id}`, {
+      const res = await fetch(`${API_URL}/api/simple-watchlist/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
