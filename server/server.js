@@ -5,9 +5,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const holdingRoutes = require("./routes/holdingRoutes");
-const watchlistRoutes = require("./routes/watchlistRoutes");
-const simpleWatchlistRoutes = require("./routes/simpleWatchlistRoutes");
-const notificationRoutes = require("./routes/notificationRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -46,9 +44,7 @@ app.use(express.json({ limit: "10mb" }));
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/holdings", holdingRoutes);
-app.use("/api/watchlist", watchlistRoutes);
-app.use("/api/simple-watchlist", simpleWatchlistRoutes);
-app.use("/api/notifications", notificationRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 // Test Route
 app.get("/", (req, res) => {

@@ -45,6 +45,22 @@ function usePortfolioAnalytics(holdings) {
     value: sectorAllocationMap[sector],
   }));
 
+  const typeAllocationMap = {};
+  holdings.forEach((stock) => {
+    const type = stock.assetType || "Stocks";
+    const value = stock.quantity * stock.currentPrice;
+    if (typeAllocationMap[type]) {
+      typeAllocationMap[type] += value;
+    } else {
+      typeAllocationMap[type] = value;
+    }
+  });
+
+  const typeAllocationData = Object.keys(typeAllocationMap).map((type) => ({
+    name: type,
+    value: typeAllocationMap[type],
+  }));
+
   // ===============================
   // Best Performer
   // ===============================
@@ -82,6 +98,7 @@ function usePortfolioAnalytics(holdings) {
     totalReturn,
     allocationData,
     sectorAllocationData,
+    typeAllocationData,
     bestPerformer,
     worstPerformer,
     largestHolding,

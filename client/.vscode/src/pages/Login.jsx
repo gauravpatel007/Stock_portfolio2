@@ -29,12 +29,12 @@ function Login() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative transition-colors">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-start mb-4">
+        <div className="flex justify-start mb-8">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition-colors bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm"
+            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white font-medium transition-colors group"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Home
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Back to Home
           </Link>
         </div>
 
@@ -42,15 +42,15 @@ function Login() {
           <div className="bg-blue-600 dark:bg-blue-500 p-2 rounded-lg">
             <BarChart2 className="text-white w-8 h-8" />
           </div>
-          <span className="text-3xl font-bold text-slate-900 dark:text-white">InvestTrack</span>
+          <span className="text-3xl font-bold text-slate-900 dark:text-white">Capital Desk</span>
         </Link>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900 dark:text-white">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           Sign in to your account
         </h2>
-        <p className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
-          Or{" "}
-          <Link to="/register" className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">
-            create a new account
+        <p className="mt-3 text-center text-slate-600 dark:text-slate-400">
+          Don't have an account?{" "}
+          <Link to="/register" className="font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors underline underline-offset-4 decoration-2 decoration-blue-200 dark:decoration-blue-800 hover:decoration-blue-600 dark:hover:decoration-blue-400">
+            Sign up now
           </Link>
         </p>
       </div>

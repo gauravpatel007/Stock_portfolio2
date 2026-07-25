@@ -14,18 +14,18 @@ function SummarySection({
 }) {
   const summaryCards = [
     {
-      title: "Total Investment",
-      amount: `₹${totalInvestment.toLocaleString()}`,
-      trend: "Invested Capital",
-      trendColor: "text-blue-600",
-      icon: Wallet,
-    },
-    {
       title: "Current Value",
       amount: `₹${currentValue.toLocaleString()}`,
       trend: "Portfolio Value",
       trendColor: "text-emerald-600",
       icon: TrendingUp,
+    },
+    {
+      title: "Total Investment",
+      amount: `₹${totalInvestment.toLocaleString()}`,
+      trend: "Invested Capital",
+      trendColor: "text-blue-600",
+      icon: Wallet,
     },
     {
       title: "Total Profit",

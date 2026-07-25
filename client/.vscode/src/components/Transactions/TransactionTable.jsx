@@ -29,10 +29,10 @@ function TransactionTable({ transactions }) {
         <tbody className="text-slate-700 dark:text-slate-300">
           {transactions.map((transaction) => (
             <tr
-              key={transaction.id}
+              key={transaction._id}
               className="border-b dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50"
             >
-              <td className="py-4">{transaction.date}</td>
+              <td className="py-4">{new Date(transaction.date).toLocaleDateString()}</td>
 
               <td>
                 <span

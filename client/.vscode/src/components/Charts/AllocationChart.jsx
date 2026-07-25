@@ -14,9 +14,14 @@ const COLORS = [
   "#9333EA",
 ];
 
-function AllocationChart({ allocationData, sectorAllocationData = [] }) {
+function AllocationChart({ allocationData, sectorAllocationData = [], typeAllocationData = [] }) {
   const [viewBy, setViewBy] = useState("stock");
-  const displayData = viewBy === "stock" ? allocationData : sectorAllocationData;
+  const displayData = 
+    viewBy === "stock" 
+      ? allocationData 
+      : viewBy === "sector" 
+        ? sectorAllocationData 
+        : typeAllocationData;
 
   const totalValue = displayData.reduce(
     (sum, item) => sum + item.value,
@@ -51,6 +56,16 @@ function AllocationChart({ allocationData, sectorAllocationData = [] }) {
           >
             By Sector
           </button>
+          <button
+            onClick={() => setViewBy("type")}
+            className={`px-3 py-1.5 text-sm font-semibold rounded-md transition-all cursor-pointer ${
+              viewBy === "type"
+                ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm"
+                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+            }`}
+          >
+            By Type
+          </button>
         </div>
       </div>
 
@@ -67,10 +82,11 @@ function AllocationChart({ allocationData, sectorAllocationData = [] }) {
                 nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={110}
-                innerRadius={60}
+                outerRadius={80}
+                innerRadius={50}
                 paddingAngle={4}
                 stroke="none"
+                label
               >
                 {displayData.map((entry, index) => (
                   <Cell

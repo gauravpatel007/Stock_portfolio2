@@ -14,12 +14,16 @@ import PerformanceSection from "../components/Performance/PerformanceSection";
 import HoldingForm from "../components/Holdings/HoldingForm";
 import HoldingsTable from "../components/Holdings/HoldingsTable";
 import TransactionTable from "../components/Transactions/TransactionTable";
+import TransactionModal from "../components/Holdings/TransactionModal";
 
 function Dashboard({ triggerNotificationRefresh }) {
   const [holdings, setHoldings] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("default");
   const [editingHolding, setEditingHolding] = useState(null);
+  const [transactionHolding, setTransactionHolding] = useState(null);
+  const [transactionRefreshTrigger, setTransactionRefreshTrigger] = useState(0);
 
   const { user, token } = useAuth();
 
@@ -48,21 +52,34 @@ function Dashboard({ triggerNotificationRefresh }) {
     }
   }, [token]);
 
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/transactions", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Failed to fetch transactions");
+        const data = await response.json();
+        setTransactions(data);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+
+    if (token) {
+      fetchTransactions();
+    }
+  }, [token, transactionRefreshTrigger]);
+
   // ==========================
   // Portfolio Analytics
   // ==========================
 
   const analytics = usePortfolioAnalytics(holdings);
 
-  // Derive transactions from holdings for current user
-  const userTransactions = holdings.map((h, index) => ({
-    id: h._id || index,
-    date: h.createdAt ? new Date(h.createdAt).toISOString().split("T")[0] : "Today",
-    type: "BUY",
-    symbol: h.symbol,
-    quantity: h.quantity,
-    price: h.avgPrice,
-  }));
+  // Transactions are now fetched from backend
 
   // ==========================
   // UI
@@ -86,6 +103,7 @@ function Dashboard({ triggerNotificationRefresh }) {
       <ChartsSection
         allocationData={analytics.allocationData}
         sectorAllocationData={analytics.sectorAllocationData}
+        typeAllocationData={analytics.typeAllocationData}
         currentValue={analytics.currentValue}
       />
 
@@ -120,6 +138,7 @@ function Dashboard({ triggerNotificationRefresh }) {
             isEditing={!!editingHolding}
             onCloseEditModal={() => setEditingHolding(null)}
             triggerNotificationRefresh={triggerNotificationRefresh}
+            onTransactionSuccess={() => setTransactionRefreshTrigger((prev) => prev + 1)}
           />
         </div>
 
@@ -131,32 +150,31 @@ function Dashboard({ triggerNotificationRefresh }) {
           sortBy={sortBy}
           setSortBy={setSortBy}
           onEditHolding={(stock) => setEditingHolding(stock)}
+          onTransactionHolding={(stock) => setTransactionHolding(stock)}
         />
+        {transactionHolding && (
+          <TransactionModal
+            holding={transactionHolding}
+            onClose={() => setTransactionHolding(null)}
+            setHoldings={setHoldings}
+            onTransactionSuccess={() => setTransactionRefreshTrigger((prev) => prev + 1)}
+          />
+        )}
       </section>
 
       {/* Transaction History */}
       <section className="mt-12">
         <TransactionTable
-          transactions={userTransactions}
+          transactions={transactions}
         />
       </section>
 
-      {/* Footer / Advanced Features Link */}
-      <footer className="mt-16 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-10 flex flex-col md:flex-row items-center justify-between text-white shadow-xl no-print">
-        <div className="text-left mb-6 md:mb-0">
-          <h3 className="text-2xl font-bold mb-2">Want to level up your portfolio?</h3>
-          <p className="text-blue-100 max-w-lg">
-            Use our pro tools to calculate exact buy/sell amounts for rebalancing and set target price alerts.
-          </p>
-        </div>
-        <a
-          href="/advanced"
-          className="inline-flex items-center gap-2 bg-white text-indigo-700 hover:bg-slate-50 px-8 py-3.5 rounded-full font-bold shadow-lg transition-all cursor-pointer transform hover:-translate-y-0.5"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-          Explore Advanced Features
-        </a>
-      </footer>
+      {/* Tagline */}
+      <div className="mt-10 mb-4 bg-gradient-to-r from-blue-50/50 to-indigo-50/50 dark:from-slate-800/50 dark:to-slate-800/50 rounded-2xl py-8 px-6 text-center border border-blue-100/50 dark:border-slate-700 no-print w-full">
+        <h3 className="text-2xl md:text-3xl font-extrabold text-slate-800 dark:text-white tracking-tight">
+          Built for investors who value <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">clarity</span> over complexity.
+        </h3>
+      </div>
 
     </main>
   );

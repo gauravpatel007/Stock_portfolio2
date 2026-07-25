@@ -33,6 +33,11 @@ const holdingSchema = new mongoose.Schema(
       type: String,
       default: "Other",
     },
+    assetType: {
+      type: String,
+      enum: ["Stocks", "ETF", "Commodities", "Crypto"],
+      default: "Stocks",
+    },
   },
   {
     timestamps: true,

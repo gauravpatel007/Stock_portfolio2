@@ -1,4 +1,4 @@
-import { FaTrash, FaEdit, FaDownload, FaPrint } from "react-icons/fa";
+import { FaTrash, FaEdit, FaDownload, FaPrint, FaPlus } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { exportToCSV, printReport } from "../../utils/exportUtils";
 
@@ -10,12 +10,14 @@ function HoldingsTable({
   sortBy,
   setSortBy,
   onEditHolding,
+  onTransactionHolding,
 }) {
   const { token } = useAuth();
 
   const handleExportCSV = () => {
     const formattedData = holdings.map((h) => ({
       Symbol: h.symbol,
+      "Asset Type": h.assetType || "Stocks",
       Quantity: h.quantity,
       "Avg Price (INR)": h.avgPrice,
       "Current Price (INR)": h.currentPrice,
@@ -162,6 +164,8 @@ function HoldingsTable({
 
               <th className="pb-4">Stock</th>
 
+              <th className="pb-4">Type</th>
+
               <th className="pb-4">Qty</th>
 
               <th className="pb-4">Avg Price</th>
@@ -213,6 +217,8 @@ function HoldingsTable({
                     {stock.symbol}
                   </td>
 
+                  <td>{stock.assetType || "Stocks"}</td>
+
                   <td>{stock.quantity}</td>
 
                   <td>
@@ -253,11 +259,19 @@ function HoldingsTable({
 
                   <td className="no-print">
 
-                    <div className="flex justify-center gap-4">
+                    <div className="flex justify-center gap-4 text-lg">
+
+                      <button
+                        onClick={() => onTransactionHolding && onTransactionHolding(stock)}
+                        className="text-orange-500 hover:text-orange-600 cursor-pointer font-bold transition-transform hover:scale-110"
+                        title="Buy/Sell Holding"
+                      >
+                        <FaPlus size={22} />
+                      </button>
 
                       <button
                         onClick={() => onEditHolding && onEditHolding(stock)}
-                        className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                        className="text-blue-600 hover:text-blue-800 cursor-pointer transition-colors"
                         title="Edit Holding"
                       >
                         <FaEdit size={18} />
@@ -267,7 +281,7 @@ function HoldingsTable({
                         onClick={() =>
                           deleteHolding(stock._id || index)
                         }
-                        className="text-red-600 hover:text-red-800 cursor-pointer"
+                        className="text-red-600 hover:text-red-800 cursor-pointer transition-colors"
                         title="Delete Holding"
                       >
                         <FaTrash size={18} />

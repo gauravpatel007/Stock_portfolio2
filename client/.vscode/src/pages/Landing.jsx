@@ -10,7 +10,7 @@ function Landing() {
           <div className="bg-blue-600 dark:bg-blue-500 p-2 rounded-lg">
             <BarChart2 className="text-white w-6 h-6" />
           </div>
-          <span className="text-xl font-bold text-slate-800 dark:text-white">InvestTrack</span>
+          <span className="text-xl font-bold text-slate-800 dark:text-white">Capital Desk</span>
         </div>
         <div className="flex gap-4">
           <Link
@@ -31,7 +31,7 @@ function Landing() {
       {/* Hero Section */}
       <main className="flex-1 flex flex-col items-center justify-center px-4 text-center">
         <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-8">
-          Master Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">Investments</span>
+          Your investments, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">One Dashboard</span>
         </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mb-12">
           Track your portfolio in real-time. Analyze performance, manage holdings, and make smarter financial decisions with our beautiful and intuitive dashboard.

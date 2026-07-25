@@ -8,6 +8,7 @@ function HoldingForm({
   isEditing = false,
   onCloseEditModal,
   triggerNotificationRefresh,
+  onTransactionSuccess,
 }) {
   const [showModal, setShowModal] = useState(false);
   const { token } = useAuth();
@@ -17,16 +18,11 @@ function HoldingForm({
   const [avgPrice, setAvgPrice] = useState("");
   const [currentPrice, setCurrentPrice] = useState("");
   const [sector, setSector] = useState("Other");
+  const [assetType, setAssetType] = useState("Stocks");
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const searchTimeoutRef = useRef(null);
-
-  // Optional Price Alert Fields
-  const [setAlert, setSetAlert] = useState(false);
-  const [alertTargetPrice, setAlertTargetPrice] = useState("");
-  const [alertCondition, setAlertCondition] = useState("ABOVE");
-  const [alertFrequency, setAlertFrequency] = useState("EVERY_TIME");
 
   // Open modal if isEditing changes
   useEffect(() => {
@@ -36,6 +32,7 @@ function HoldingForm({
       setAvgPrice(editHolding.avgPrice || "");
       setCurrentPrice(editHolding.currentPrice || "");
       setSector(editHolding.sector || "Other");
+      setAssetType(editHolding.assetType || "Stocks");
       setShowModal(true);
     }
   }, [isEditing, editHolding]);
@@ -47,10 +44,9 @@ function HoldingForm({
     setAvgPrice("");
     setCurrentPrice("");
     setSector("Other");
+    setAssetType("Stocks");
     setSearchResults([]);
     setShowDropdown(false);
-    setSetAlert(false);
-    setAlertTargetPrice("");
     if (onCloseEditModal) onCloseEditModal();
   };
 
@@ -66,6 +62,7 @@ function HoldingForm({
       avgPrice: Number(avgPrice),
       currentPrice: Number(currentPrice),
       sector,
+      assetType,
     };
 
     try {
@@ -108,30 +105,8 @@ function HoldingForm({
 
         setHoldings((prev) => [...prev, savedHolding]);
       }
-
-      // Optional Watchlist / Alert Creation
-      if (setAlert && alertTargetPrice) {
-        try {
-          await fetch("http://localhost:5000/api/watchlist", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              symbol: symbol.toUpperCase(),
-              targetPrice: Number(alertTargetPrice),
-              condition: alertCondition,
-              frequency: alertFrequency,
-            }),
-          });
-          if (triggerNotificationRefresh) triggerNotificationRefresh();
-        } catch (e) {
-          console.error("Error creating optional alert:", e);
-        }
-      }
-
       handleClose();
+      if (onTransactionSuccess) onTransactionSuccess();
     } catch (error) {
       console.error(error);
       alert(`Error saving holding: ${error.message}`);
@@ -256,6 +231,22 @@ function HoldingForm({
                 />
               </div>
 
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">
+                  Asset Type
+                </label>
+                <select
+                  value={assetType}
+                  onChange={(e) => setAssetType(e.target.value)}
+                  className="w-full bg-transparent dark:bg-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                >
+                  <option value="Stocks">Stocks</option>
+                  <option value="ETF">ETF</option>
+                  <option value="Commodities">Commodities</option>
+                  <option value="Crypto">Crypto</option>
+                </select>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-1">
@@ -284,65 +275,7 @@ function HoldingForm({
                 </div>
               </div>
 
-              {/* Optional Price Alert Option */}
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-700">
-                <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-700 dark:text-slate-300 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={setAlert}
-                    onChange={(e) => setSetAlert(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                  />
-                  <Bell className="w-4 h-4 text-blue-600" /> Set Price Target Alert (Optional)
-                </label>
 
-                {setAlert && (
-                  <div className="mt-3 p-4 bg-blue-50/60 dark:bg-blue-900/30 rounded-xl border border-blue-100 dark:border-blue-800 space-y-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                        Alert Target Price (₹)
-                      </label>
-                      <input
-                        type="number"
-                        placeholder="e.g. 3000"
-                        value={alertTargetPrice}
-                        onChange={(e) => setAlertTargetPrice(e.target.value)}
-                        className="w-full bg-white dark:bg-slate-700 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                          Condition
-                        </label>
-                        <select
-                          value={alertCondition}
-                          onChange={(e) => setAlertCondition(e.target.value)}
-                          className="w-full bg-white dark:bg-slate-700 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-sm"
-                        >
-                          <option value="ABOVE">Price ≥ Target</option>
-                          <option value="BELOW">Price ≤ Target</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
-                          Frequency
-                        </label>
-                        <select
-                          value={alertFrequency}
-                          onChange={(e) => setAlertFrequency(e.target.value)}
-                          className="w-full bg-white dark:bg-slate-700 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg p-2 text-sm"
-                        >
-                          <option value="EVERY_TIME">Every Time</option>
-                          <option value="ONCE">Only Once</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
             </div>
 
             <div className="flex justify-end gap-4 mt-8">
